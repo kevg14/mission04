@@ -13,12 +13,20 @@
     <h1>Fill Out Movie Attributes</h1>
     <div>
         <form method="post">
-            <label asp-for="category">
-                Category:
-            </label>
-            <input asp-for="category" />
-            <br />
+            <div>
+                <label asp-for="CategoryId">Category:</label>
+                <select asp-for="CategoryId" />
+                @*<option value="">Select a category</option>*@
 
+                    @foreach (Category c in ViewBag.Categories)
+                    {
+                        <option value="@c.CategoryId">@c.Name</option>
+
+                    }
+            </div>
+            <br />
+            <br />
+            <br />
             <label asp-for="title">Title:</label>
             <input asp-for="title" />
             <br />

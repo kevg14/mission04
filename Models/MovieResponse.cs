@@ -16,17 +16,25 @@ namespace mission04.Models
 
         public int MovieId { get; set; }
 
+        public Category category { get; set; }
+
         [Required(ErrorMessage = "Input a category")]
-        public string category { get; set; }
+        public int CategoryId { get; set; }
+
         [Required(ErrorMessage = "Input a title")]
         public string title { get; set; }
+
         [Required(ErrorMessage = "Input a Year")]
         public int year { get; set; }
+
         [Required(ErrorMessage = "Input a Director")]
         public string director { get; set; }
+
         [Required(ErrorMessage = "Input a rating")]
         public string rating { get; set; }
+
         public bool edited { get; set; }
+
         public string lent { get; set; }
         [MaxLength(25)]
         public string note { get; set; }

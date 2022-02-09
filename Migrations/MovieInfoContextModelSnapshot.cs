@@ -15,15 +15,70 @@ namespace mission04.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.22");
 
+            modelBuilder.Entity("mission04.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            Name = "Action/Adventure"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            Name = "Comedy"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            Name = "Drama"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            Name = "Family"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            Name = "Horror/Suspense"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            Name = "Horror/Suspense"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            Name = "Television"
+                        },
+                        new
+                        {
+                            CategoryId = 8,
+                            Name = "VHS"
+                        });
+                });
+
             modelBuilder.Entity("mission04.Models.MovieResponse", b =>
                 {
                     b.Property<int>("MovieId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("category")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("director")
                         .IsRequired()
@@ -36,7 +91,8 @@ namespace mission04.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("note")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(25);
 
                     b.Property<string>("rating")
                         .IsRequired()
@@ -51,13 +107,15 @@ namespace mission04.Migrations
 
                     b.HasKey("MovieId");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("responses");
 
                     b.HasData(
                         new
                         {
                             MovieId = 1,
-                            category = "Action/Adventure",
+                            CategoryId = 1,
                             director = "Peter Ramsey, Bob Persichetti, Rodney Rothman",
                             edited = false,
                             lent = "",
@@ -69,7 +127,7 @@ namespace mission04.Migrations
                         new
                         {
                             MovieId = 2,
-                            category = "Drama",
+                            CategoryId = 2,
                             director = "Frank Darabont",
                             edited = true,
                             lent = "",
@@ -81,7 +139,7 @@ namespace mission04.Migrations
                         new
                         {
                             MovieId = 3,
-                            category = "Family",
+                            CategoryId = 3,
                             director = "Lee Unkrich",
                             edited = false,
                             lent = "",
@@ -90,6 +148,15 @@ namespace mission04.Migrations
                             title = "Toy Story 3",
                             year = 2010
                         });
+                });
+
+            modelBuilder.Entity("mission04.Models.MovieResponse", b =>
+                {
+                    b.HasOne("mission04.Models.Category", "category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

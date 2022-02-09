@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using mission04.Models;
 
@@ -11,18 +12,18 @@ namespace mission04.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-        private MovieInfoContext _blahContext { get; set; }
+        private MovieInfoContext maContext { get; set; }
 
-        public HomeController(ILogger<HomeController> logger, MovieInfoContext Important)
+        public HomeController(MovieInfoContext Important)
         {
-            _logger = logger;
-            _blahContext = Important;
+            maContext = Important;
         }
 
         [HttpGet]
         public IActionResult MovieApplication()
         {
+            ViewBag.Categories = maContext.Categories.ToList();
+
             return View();
         }
 
@@ -30,25 +31,38 @@ namespace mission04.Controllers
         [HttpPost]
         public IActionResult MovieApplication(MovieResponse ar)
         {
+            ViewBag.Categories = maContext.Categories.ToList();
             //checks to see if submit is valid if so to submit
             if (ModelState.IsValid)
             {
-                _blahContext.Add(ar);
-                _blahContext.SaveChanges();
-                return View("Confirmation");
+                maContext.Add(ar);
+                maContext.SaveChanges();
+                return View("Confirmation", ar);
             }
             else
             {
-                return View(ar);
+
+                return View();
 
             }
 
+        }
+
+        [HttpGet]
+        public IActionResult MovieList()
+        {
+            var applications = maContext.responses
+                .Include(x => x.category)
+                .ToList();
+                
+            return View(applications);
         }
 
         public IActionResult Index()
         {
             return View();
         }
+
         public IActionResult Confirmation()
         {
             return View();
@@ -59,16 +73,42 @@ namespace mission04.Controllers
             return View();
         }
 
-
-        public IActionResult Privacy()
+        [HttpGet]
+        public IActionResult Edit(int movieid)
         {
-            return View();
+            ViewBag.Categories = maContext.Categories.ToList();
+
+            var application = maContext.responses.Single(x => x.MovieId == movieid);
+
+            return View("MovieApplication",application);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpPost]
+        public IActionResult Edit(MovieResponse Inst)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+                maContext.Update(Inst);
+                maContext.SaveChanges();
+
+                return RedirectToAction("MovieList");
+      
+
         }
+
+        [HttpGet]
+        public IActionResult Delete(int movieid)
+        {
+            var movie = maContext.responses.Single(x => x.MovieId == movieid);
+            return View(movie);
+        }
+        [HttpPost]
+        public IActionResult Delete(MovieResponse ar)
+        {
+            maContext.responses.Remove(ar);
+            maContext.SaveChanges();
+
+            return RedirectToAction("MovieList");
+        }
+
     }
 }

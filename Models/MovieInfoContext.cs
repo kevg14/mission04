@@ -17,15 +17,32 @@ namespace mission04.Models
             //leave blank for now
         }
         public DbSet<MovieResponse> responses { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
+            mb.Entity<Category>().HasData(
+                    new Category { CategoryId=1, Name = "Action/Adventure" },
+                    new Category { CategoryId = 2, Name = "Comedy" },
+                    new Category { CategoryId = 3, Name = "Drama" },
+                    new Category { CategoryId = 4, Name = "Family" },
+                    new Category { CategoryId = 5, Name = "Horror/Suspense" },
+                    new Category { CategoryId = 6, Name = "Horror/Suspense" },
+                    new Category { CategoryId = 7, Name = "Television" },
+                    new Category { CategoryId = 8, Name = "VHS" }
+
+
+
+
+
+                );
+
             mb.Entity<MovieResponse>().HasData(
 
                 new MovieResponse
                 {
                     MovieId = 1,
-                    category = "Action/Adventure",
+                    CategoryId = 1,
                     title = "Spiderman:Into the Spider-Verse",
                     year = 2018,
                     director = "Peter Ramsey, Bob Persichetti, Rodney Rothman",
@@ -38,7 +55,7 @@ namespace mission04.Models
                 new MovieResponse
                 {
                     MovieId = 2,
-                    category = "Drama",
+                    CategoryId = 2,
                     title = "Shawshank Redemption, The",
                     year = 1994,
                     director = "Frank Darabont",
@@ -51,7 +68,7 @@ namespace mission04.Models
                 new MovieResponse
                 {
                     MovieId = 3,
-                    category = "Family",
+                    CategoryId = 3,
                     title = "Toy Story 3",
                     year = 2010,
                     director = "Lee Unkrich",
